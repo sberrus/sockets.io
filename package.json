@@ -1,13 +1,11 @@
 {
-  "name": "websockets",
+  "name": "websockets - colas",
   "version": "1.0.0",
   "description": "Curso de Nodejs Web Sockets",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node .",
-    "deployGit": "",
-    "deployHeroku":""
+    "start": "node ."
   },
   "author": "samdev",
   "license": "ISC",
