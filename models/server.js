@@ -24,10 +24,18 @@ class Server {
 	}
 
 	sockets() {
+		//El evento connection es el que nos permite mantener la conexión y el intercambio de información entre el cliente y el servidor. Este manejará a cada una de las conexiones de manera individual y dentro de este cuerpo es donde debemos realizar el resto de eventos y escuchas de los web sockets.
 		this.io.on("connection", (socket) => {
 			console.log("Cliente Conectado", socket.id);
 			socket.on("disconnect", () => {
 				console.log("Cliente Desconectado", socket.id);
+			});
+
+			//En el front tenemos en el archivo que maneja los sockets, una instrucción con un .emit("algo"). Para capturar dicho emit realizamos en el backend un evento .on("algo").
+			//El primer argumento siempre va a ser el identificador del mensaje en cuestión. Si en el front tenemos un .emit("texto"), para que el back escuche ese evento tenemos que tener en la conexión un .on("texto") siendo ambos con el mismo identificador, de lo contrario, el servidor no será capaz de escuchar lo que envia el cliente.
+			socket.on("enviar-mensaje", (payload) => {
+				console.log(`${payload.id}: "${payload.mensaje}" -- ${payload.date}`);
+				socket.emit("respuesta-servidor", `${payload.id}: "${payload.mensaje}" -- ${payload.date}`);
 			});
 		});
 	}

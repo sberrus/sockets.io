@@ -15,7 +15,19 @@
 	<body class="container">
 		<h1>Socket Client</h1>
 		<hr />
-		<div class="w-50 m-auto text-center border border-3 p-3" id="conectionDisplay">Esperando conexión</div>
+		<div class="w-50 m-auto text-center bg-danger" id="disconectedDisplay">Servidor Desconectado!</div>
+		<div class="w-50 m-auto text-center text-light bg-success" id="conectedDisplay">Servidor Conectado!</div>
+
+		<div class="container">
+			<div class="row">
+				<form action="">
+					<div class="col"><input type="text" id="txtMsg" class="form-control" /></div>
+					<div class="d-flex flex-row justify-content-start">
+						<button id="btnMsg" type="submit">Enviar</button>
+					</div>
+				</form>
+			</div>
+		</div>
 
 		<!--Bootstrap-->
 		<script

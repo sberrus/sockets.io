@@ -2,19 +2,43 @@
 
 //Al usar esta función establecemos la conexión mediante web sockets con el backend
 const socket = io();
-const conectionDisplay = document.getElementById("conectionDisplay");
-conectionDisplay.classList.add("border-danger", "bg-warning");
+
+//Referencias de los displays
+const conectedDisplay = document.getElementById("conectedDisplay");
+const disconectedDisplay = document.getElementById("disconectedDisplay");
+
+//Referencias de los inputs
+const txtMsg = document.getElementById("txtMsg");
+const btnMsg = document.getElementById("btnMsg");
 
 socket.on("connect", () => {
-	conectionDisplay.classList.remove("border-danger", "bg-warning");
-	conectionDisplay.classList.add("border-success", "bg-success", "text-light");
-	conectionDisplay.textContent = "Conección establecida con servidor";
-	console.log("conectado");
+	conectedDisplay.style.display = "block";
+	disconectedDisplay.style.display = "none";
 });
 
 socket.on("disconnect", () => {
-	conectionDisplay.classList.remove("border-success", "bg-success", "text-light");
-	conectionDisplay.classList.add("border-danger", "bg-warning");
-	conectionDisplay.textContent = "Servidor Desconectado";
-	console.log("No hay conexión con el servidor");
+	conectedDisplay.style.display = "none";
+	disconectedDisplay.style.display = "block";
+});
+
+socket.on("respuesta-servidor", (e) => {
+	console.log(e);
+});
+
+btnMsg.addEventListener("click", (e) => {
+	e.preventDefault();
+
+	//texto del input
+	const mensaje = txtMsg.value;
+	const payload = {
+		mensaje,
+		//Aquí podriamos enviar al servidor el identificador del usuario para saber quien envio el mensaje. No se usa la propiedad "id" de socket.io en el backend porque es muy volátil.
+		id: "Samdev",
+		date: new Date(),
+	};
+
+	//.emit() emit nos permite enviarle un mensaje al servidor mediante web sockets.
+	socket.emit("enviar-mensaje", payload);
+
+	txtMsg.value = "";
 });
