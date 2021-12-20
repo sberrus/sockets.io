@@ -40,8 +40,8 @@ btnMsg.addEventListener("click", (e) => {
 	};
 
 	//.emit() emit nos permite enviarle un mensaje al servidor mediante web sockets.
-	socket.emit("enviar-mensaje", payload, ({ id, fecha, desc }) => {
-		console.log({ id, fecha, desc });
+	socket.emit("enviar-mensaje", payload, (payload) => {
+		console.log(payload);
 	});
 
 	txtMsg.value = "";
