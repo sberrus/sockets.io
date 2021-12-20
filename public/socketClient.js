@@ -10,6 +10,7 @@ const disconectedDisplay = document.getElementById("disconectedDisplay");
 //Referencias de los inputs
 const txtMsg = document.getElementById("txtMsg");
 const btnMsg = document.getElementById("btnMsg");
+const clientID = document.getElementById("clientID");
 
 socket.on("connect", () => {
 	conectedDisplay.style.display = "block";
@@ -30,15 +31,18 @@ btnMsg.addEventListener("click", (e) => {
 
 	//texto del input
 	const mensaje = txtMsg.value;
+	const id = clientID.value;
 	const payload = {
 		mensaje,
 		//Aquí podriamos enviar al servidor el identificador del usuario para saber quien envio el mensaje. No se usa la propiedad "id" de socket.io en el backend porque es muy volátil.
-		id: "Samdev",
+		id,
 		date: new Date(),
 	};
 
 	//.emit() emit nos permite enviarle un mensaje al servidor mediante web sockets.
-	socket.emit("enviar-mensaje", payload);
+	socket.emit("enviar-mensaje", payload, ({ id, fecha, desc }) => {
+		console.log({ id, fecha, desc });
+	});
 
 	txtMsg.value = "";
 });
