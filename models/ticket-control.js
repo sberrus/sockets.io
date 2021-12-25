@@ -20,6 +20,10 @@ class TicketControl {
 		this.init();
 	}
 
+	get countQueue() {
+		return this.tickets.length;
+	}
+
 	get toJSON() {
 		return {
 			ultimo: this.ultimo,
@@ -44,6 +48,11 @@ class TicketControl {
 		return "Ticket " + ticket.numero;
 	}
 
+	/**
+	 * Atiende el ticket correspondiente eliminandolo de la cola.
+	 * @param {*} escritorio
+	 * @returns
+	 */
 	atenderTicket(escritorio) {
 		//No tenemos ticket
 		if (this.tickets.length === 0) {
@@ -57,7 +66,7 @@ class TicketControl {
 		this.ultimos4.unshift(ticket);
 
 		if (this.ultimos4.length > 3) {
-			this.ultimos4 = this.ultimos4.slice(0, 3);
+			this.ultimos4 = this.ultimos4.slice(0, 4);
 		}
 		this.guardarDB();
 
