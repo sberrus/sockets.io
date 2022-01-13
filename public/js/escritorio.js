@@ -26,10 +26,12 @@ socket.on("disconnect", () => {
 
 socket.on("connect", () => {
 	btnAtender.disabled = false;
+
 	btnAtender.addEventListener("click", () => {
 		socket.emit("atender-ticket", { escritorio }, ({ ok, ticket, count }) => {
 			divAlerta.style.display = "none";
 			contadorCola.innerText = count;
+
 			if (!ok) {
 				divAlerta.style.display = "";
 				contadorCola.style.display = "none";
@@ -38,7 +40,22 @@ socket.on("connect", () => {
 			}
 
 			lblTicket.innerText = `Ticket ${ticket.numero}`;
+			contadorCola.style.display = "";
 			contadorCola.innerText = count;
 		});
 	});
+});
+
+socket.on("tickets-por-atender", (payload) => {
+	if (payload <= 0) {
+		btnAtender.disabled = true;
+		contadorCola.style.display = "none";
+		divAlerta.style.display = "";
+		return;
+	}
+
+	btnAtender.disabled = false;
+	divAlerta.style.display = "none";
+	contadorCola.style.display = "";
+	contadorCola.innerText = `${payload}`;
 });

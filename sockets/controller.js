@@ -3,33 +3,31 @@ const TicketControl = require("../models/ticket-control");
 const tickets = new TicketControl();
 
 const socketController = (socket) => {
-	console.log(`${socket.id} conectado`);
-
+	//Cliente conectado
+	socket.emit("estado-actual", tickets.ultimos4);
 	socket.emit("ultimo-ticket", tickets.ultimo);
-
-	socket.on("disconnect", () => {
-		console.log(`${socket.id} desconectado`);
-	});
+	socket.emit("tickets-por-atender", tickets.countQueue);
 
 	socket.on("siguiente-ticket", (payload, callback) => {
 		const siguiente = tickets.siguiente();
 
 		callback(siguiente);
 
-		//TODO: Notificar que hay un nuevo ticket pendiente de asignar.
+		socket.broadcast.emit("tickets-por-atender", tickets.countQueue);
 	});
 
+	//Atendiendo Ticket
 	socket.on("atender-ticket", ({ escritorio }, callback) => {
 		if (!escritorio) {
 			return callback({
 				ok: false,
-				msg: "El escriotiro es obligatorio",
+				msg: "El escritorio es obligatorio",
 			});
 		}
 
 		const ticket = tickets.atenderTicket(escritorio);
 		if (!ticket) {
-			callback({
+			return callback({
 				ok: false,
 				msg: "No hay tickets en la cola",
 				count: tickets.countQueue,
@@ -41,6 +39,9 @@ const socketController = (socket) => {
 				count: tickets.countQueue,
 			});
 		}
+		socket.broadcast.emit("estado-actual", tickets.ultimos4);
+		socket.broadcast.emit("tickets-por-atender", tickets.countQueue);
+		socket.emit("tickets-por-atender", tickets.countQueue);
 	});
 };
 
